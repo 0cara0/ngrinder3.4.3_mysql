@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+   
+	<changeSet author="initialDB" id="2" dbms="mysql">
+		<validCheckSum/>
+		<preConditions onFail="MARK_RAN">
+		 	<not>
+            	<tableExists tableName="TAG"/>
+         	</not>
+        </preConditions>
+        <comment>DB initialization.</comment>
+        <sql>
+
+            CREATE TABLE IF NOT EXISTS `agent`  (
+            `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+            `APPROVED` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+            `HOSTNAME` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `IP` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `REGION` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `STATE` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `PORT` int(11) NULL DEFAULT 0,
+            `SYSTEM_STAT` varchar(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `VERSION` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+            PRIMARY KEY (`ID`) USING BTREE,
+            UNIQUE INDEX `CONSTRAINT_3B`(`ID`) USING BTREE
+            ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+
+            CREATE TABLE IF NOT EXISTS `nuser`  (
+            `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+            `CREATED_DATE` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
+            `LAST_MODIFIED_DATE` timestamp(0) NOT NULL DEFAULT '0000-00-00 00:00:00',
+            `AUTHENTICATION_PROVIDER_CLASS` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `DESCRIPTION` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `EMAIL` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `ENABLED` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'T',
+            `IS_EXTERNAL` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'F',
+            `MOBILE_PHONE` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `PASSWORD` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `ROLE_NAME` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+            `TIMEZONE` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `USER_ID` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+            `USER_LANGUAGE` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `USER_NAME` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `CREATED_USER` bigint(20) NULL DEFAULT NULL,
+            `LAST_MODIFIED_USER` bigint(20) NULL DEFAULT NULL,
+            PRIMARY KEY (`ID`) USING BTREE,
+            UNIQUE INDEX `CONSTRAINT_47`(`ID`) USING BTREE,
+            UNIQUE INDEX `CONSTRAINT_473`(`USER_ID`) USING BTREE,
+            INDEX `LAST_MODIFIED_USER_INDEX_NUSER`(`LAST_MODIFIED_USER`) USING BTREE,
+            INDEX `CREATED_USER_INDEX`(`CREATED_USER`) USING BTREE
+            ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+            INSERT INTO `nuser` VALUES (1, '2020-01-08 10:52:36', '2020-01-08 10:48:47', NULL, NULL, 'admin@nhn.com', 'T', 'T', NULL, 'a40546cc4fd6a12572828bb803380888ad1bfdab', 'ADMIN', 'Asia/Shanghai', 'admin', 'cn', 'admin', NULL, NULL);
+            INSERT INTO `nuser` VALUES (2, '2019-01-16 11:36:18', '2020-01-08 10:48:47', NULL, NULL, 'user@nhn.com', 'T', 'T', NULL, 'b6b1f4781776979c0775c71ebdd8bdc084aac5fe', 'USER', NULL, 'user', NULL, 'user', NULL, NULL);
+            INSERT INTO `nuser` VALUES (3, '2019-01-16 11:36:18', '2020-01-08 10:48:47', NULL, NULL, 'superuser@nhn.com', 'T', 'T', NULL, '2ad158ada96db75a54f6d4f847695a5094748c5c', 'SUPER_USER', NULL, 'superuser', NULL, 'superuser', NULL, NULL);
+            INSERT INTO `nuser` VALUES (4, '2019-01-16 11:36:18', '2020-01-08 10:48:47', NULL, NULL, 'system@nhn.com', 'T', 'T', NULL, '95f45e982feacf98b60658270111197070d53cbe', 'SYSTEM_USER', NULL, 'system', NULL, 'system', NULL, NULL);
+
+
+            CREATE TABLE IF NOT EXISTS `perf_test`  (
+            `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+            `CREATED_DATE` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
+            `LAST_MODIFIED_DATE` timestamp(0) NOT NULL DEFAULT '0000-00-00 00:00:00',
+            `AGENT_COUNT` int(11) NULL DEFAULT NULL,
+            `DESCRIPTION` varchar(2048) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `DISTRIBUTION_PATH` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `DURATION` bigint(20) NULL DEFAULT NULL,
+            `ERRORS` bigint(20) NULL DEFAULT NULL,
+            `FINISH_TIME` timestamp(0) NOT NULL DEFAULT '0000-00-00 00:00:00',
+            `IGNORE_SAMPLE_COUNT` int(11) NULL DEFAULT NULL,
+            `RAMP_UP_INIT_COUNT` int(11) NULL DEFAULT NULL,
+            `RAMP_UP_INIT_SLEEP_TIME` int(11) NULL DEFAULT NULL,
+            `LAST_PROGRESS_MESSAGE` varchar(2048) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `MEAN_TEST_TIME` double NULL DEFAULT NULL,
+            `PEAK_TPS` double NULL DEFAULT NULL,
+            `ERRORRATE` double NULL DEFAULT NULL,
+            `MINRT` double NULL DEFAULT NULL,
+            `PCT25RT` double NULL DEFAULT NULL,
+            `PCT50RT` double NULL DEFAULT NULL,
+            `PCT75RT` double NULL DEFAULT NULL,
+            `PCT90RT` double NULL DEFAULT NULL,
+            `PCT95RT` double NULL DEFAULT NULL,
+            `PCT99RT` double NULL DEFAULT NULL,
+            `MAXRT` double NULL DEFAULT NULL,
+            `PORT` int(11) NULL DEFAULT NULL,
+            `RAMP_UP_STEP` int(11) NULL DEFAULT NULL,
+            `RAMP_UP_INCREMENT_INTERVAL` int(11) NULL DEFAULT NULL,
+            `PROCESSES` int(11) NULL DEFAULT NULL,
+            `PROGRESS_MESSAGE` varchar(2048) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `RUN_COUNT` int(11) NULL DEFAULT NULL,
+            `SCHEDULED_TIME` timestamp(0) NOT NULL DEFAULT '0000-00-00 00:00:00',
+            `SCRIPT_NAME` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `SCRIPT_REVISION` bigint(20) NULL DEFAULT NULL,
+            `SEND_MAIL` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'F',
+            `START_TIME` timestamp(0) NOT NULL DEFAULT '0000-00-00 00:00:00',
+            `STATUS` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `STOP_REQUEST` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'F',
+            `TAG_STRING` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `TARGET_HOSTS` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `TEST_COMMENT` varchar(2048) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `TEST_ERROR_CAUSE` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `NAME` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `TEST_TIME_STANDARD_DEVIATION` double NULL DEFAULT NULL,
+            `TESTS` bigint(20) NULL DEFAULT NULL,
+            `THREADS` int(11) NULL DEFAULT NULL,
+            `THRESHOLD` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `TPS` double NULL DEFAULT NULL,
+            `USE_RAMPUP` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `VUSER_PER_AGENT` int(11) NULL DEFAULT NULL,
+            `CREATED_USER` bigint(20) NULL DEFAULT NULL,
+            `LAST_MODIFIED_USER` bigint(20) NULL DEFAULT NULL,
+            `REGION` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `SAFE_DISTRIBUTION` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'F',
+            `AGENT_STAT` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `RUNNING_SAMPLE` varchar(2048) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `MONITOR_STAT` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `SAMPLING_INTERVAL` int(11) NULL DEFAULT NULL,
+            `PARAM` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '',
+            `RAMP_UP_TYPE` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'PROCESS',
+            PRIMARY KEY (`ID`) USING BTREE,
+            UNIQUE INDEX `CONSTRAINT_C3`(`ID`) USING BTREE,
+            INDEX `LAST_MODIFIED_USER_INDEX_PERF_TEST`(`LAST_MODIFIED_USER`) USING BTREE,
+            INDEX `CREATED_USER_INDEX_PERF_TEST`(`CREATED_USER`) USING BTREE,
+            INDEX `SCHEDULED_TIME_INDEX`(`SCHEDULED_TIME`) USING BTREE,
+            INDEX `PERF_TEST_STATUS_INDEX`(`STATUS`) USING BTREE
+            ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+
+            CREATE TABLE IF NOT EXISTS `perf_test_tag`  (
+            `PERF_TEST_ID` bigint(20) NOT NULL,
+            `TAG_ID` bigint(20) NOT NULL,
+            PRIMARY KEY (`PERF_TEST_ID`, `TAG_ID`) USING BTREE
+            ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+
+            CREATE TABLE IF NOT EXISTS `shared_user`  (
+            `OWNER_ID` bigint(20) NOT NULL,
+            `FOLLOW_ID` bigint(20) NOT NULL,
+            PRIMARY KEY (`OWNER_ID`, `FOLLOW_ID`) USING BTREE
+            ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+
+            CREATE TABLE IF NOT EXISTS `system_monitor`  (
+            `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+            `COLLECT_TIME` bigint(20) NULL DEFAULT NULL,
+            `CPU_USED_PERCENTAGE` double NULL DEFAULT NULL,
+            `FREE_MEMORY` bigint(20) NULL DEFAULT NULL,
+            `IP` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `MONITOR_KEY` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `MESSAGE` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `PORT` int(11) NOT NULL,
+            `SYSTEM` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `TOTAL_MEMORY` bigint(20) NULL DEFAULT NULL,
+            PRIMARY KEY (`ID`) USING BTREE,
+            UNIQUE INDEX `CONSTRAINT_F1`(`ID`) USING BTREE,
+            INDEX `MONITOR_KEY_INDEX`(`MONITOR_KEY`) USING BTREE,
+            INDEX `COLLECT_TIME_INDEX`(`COLLECT_TIME`) USING BTREE,
+            INDEX `IP_INDEX`(`IP`) USING BTREE
+            ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+
+            CREATE TABLE IF NOT EXISTS `tag`  (
+            `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+            `CREATED_DATE` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
+            `LAST_MODIFIED_DATE` timestamp(0) NOT NULL DEFAULT '0000-00-00 00:00:00',
+            `TAGVALUE` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            `CREATED_USER` bigint(20) NULL DEFAULT NULL,
+            `LAST_MODIFIED_USER` bigint(20) NULL DEFAULT NULL,
+            PRIMARY KEY (`ID`) USING BTREE,
+            UNIQUE INDEX `CONSTRAINT_14`(`ID`) USING BTREE,
+            INDEX `LAST_MODIFIED_USER_INDEX_TAG`(`LAST_MODIFIED_USER`) USING BTREE,
+            INDEX `CREATED_USER_INDEX_TAG`(`CREATED_USER`) USING BTREE
+            ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>
