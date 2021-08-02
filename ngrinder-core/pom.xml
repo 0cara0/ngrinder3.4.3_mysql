@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>
-			<version>1.4.1</version>
+			<version>1.21</version>
 		</dependency>
 
 
@@ -152,7 +152,7 @@
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
 		</dependency>
-		<!--×Ô¶¨Òå-->
+		<!--Ã—Ã”Â¶Â¨Ã’Ã¥-->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
